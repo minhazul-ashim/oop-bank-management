@@ -18,7 +18,7 @@ class SavingsAccount(User) :
 
     def withdraw(self, amount):
         if(amount > self.__balance) :
-            print('Insufficient Funds');
+            print('Withdrawal Amount Exceeded.');
             return;
         self.__balance -= amount;
         Bank.setBalance(Bank.getBalance() - amount);
@@ -80,7 +80,7 @@ class CurrentAccount(User) :
 
     def withdraw(self, amount):
         if(amount > self.__balance) :
-            print('Insufficient Funds');
+            print('Withdrawal Amount Exceeded.');
             return;
     
         self.__balance -= amount;
