@@ -44,7 +44,7 @@ class SavingsAccount(User) :
         if not Bank.loan :
             print('Loan is currently disabled');
             return;
-        if(Bank.getBalance() <= 0) :
+        if(Bank.getBalance() <= amount) :
             print('Sorry! Bank is bankrupt');
             return;
         if(self.loan_count <= 0) :
@@ -106,7 +106,7 @@ class CurrentAccount(User) :
         if not Bank.loan :
             print('Loan is currently disabled');
             return;
-        if(Bank.getBalance() <= 0) :
+        if(Bank.getBalance() <= amount) :
             print('Sorry! Bank is bankrupt');
             return;
         if(self.loan_count <= 0) :
