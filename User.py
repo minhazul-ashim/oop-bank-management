@@ -19,10 +19,6 @@ class User(ABC) :
         raise NotImplementedError;
 
     @abstractmethod
-    def checkBalance(self, amount) :
-        raise NotImplementedError;
-
-    @abstractmethod
     def transfer(self, amount, acc_no) :
         raise NotImplementedError;
 

@@ -9,19 +9,22 @@ while True :
     n = int(input());
     if n == 1 :
         while True :
-            print('Choose your Option');
+            print('\n Choose your Option');
             print('1 - Create Account');
             print('2 - Log in to Existing Account');
+            print('3 - Go Back');
             print('Go to ', end=" ");
             x = int(input());
             if x == 1 :
                 SystemInteraction.accountCreation();
             elif x == 2 :
-                pass;
+                SystemInteraction.userLogin();
+            elif x == 3 :
+                break;
             else :
                 print('Invalid Option');
     elif n == 2 :
-        pass;
+        SystemInteraction.adminInteraction();
     elif n == 3 :
         print('Process Terminated');
         break;

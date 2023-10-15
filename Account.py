@@ -9,116 +9,120 @@ class SavingsAccount(User) :
         super().__init__(name, email, address);
         self.__balance = balance;
         self.acc_no = f'SA-{random.randint(1, 1000)}';
+        self.__trx_history = [];
 
     def deposit(self, amount):
         self.__balance += amount;
-        Bank.balance += amount;
+        Bank.setBalance(Bank.getBalance() + amount);
         print(f'Successfully Deposited Amount {amount}, in account {self.acc_no}, current balance is {self.__balance}');
 
     def withdraw(self, amount):
+        if(amount > self.__balance) :
+            print('Insufficient Funds');
+            return;
         self.__balance -= amount;
-        Bank.balance -= amount;
+        Bank.setBalance(Bank.getBalance() - amount);
         print(f'Withdrawn {amount} from account {self.acc_no}, current balance is {self.__balance}');
     
     def transfer(self, amount, acc_no) :
-        receiver = None;
         if(self.__balance < amount) :
             print('Insufficient Balance.');
             return;
-
-        for account in Bank.__saving_accounts :
-            if(account.acc_no == acc_no) :
-                receiver = account;
-
-        for account in Bank.__current_accounts :
-            if(account.acc_no == acc_no) :
-                receiver = account;
-
-        if not receiver :
-            print('Sorry! Account does not exist.');
+        transaction = Bank.transferAmount(self, amount, acc_no);
+        if not transaction :
+            print('Transactio Failed');
         else :
-            transaction = Transaction(self, amount, receiver);
-            self.trx_history = transaction;
-            Bank.trx_history = transaction;
+            self.__trx_history.append(transaction);
 
-    def checkBalance(self):
-        print(f'The Savings Account, {self.acc_no} has balance of {self.__balance}');
+
+    @property
+    def balance(self):
         return self.__balance;
+
 
     def issueLoan(self, amount) :
         if not Bank.loan :
             print('Loan is currently disabled');
             return;
-        if(Bank.balance <= 0) :
+        if(Bank.getBalance() <= 0) :
             print('Sorry! Bank is bankrupt');
             return;
         if(self.loan_count <= 0) :
             print(f'Sorry! You have already issued two loans and in {self.debt} debt to the bank');
             return;
         
-        Bank.balance -= amount;
         self.debt += amount;
         self.loan_count -= 1;
-        Bank.loan_issued += 1;
-        Bank.loan_amount += amount;
+        Bank.issueLoan(amount);        
+        print(f'You are issued a cash loan of {amount}. The amount is not added to your account');
         
+    def viewTransactions(self) :
+        print('Transactions are listed below.');
+        for transaction in self.__trx_history :
+            print(f'Transaction of {transaction.amount}, on {transaction.time} \n');
+
+        if(self.__trx_history.__len__() == 0) :
+            print('No transaction history');
 
 
 #  Class Definition for Current Account;
 class CurrentAccount(User) :
-    def __init__(self, name, email, address, balance) -> None:
-        super().__init__(name, email, address);
+    def __init__(self, name, email, address, balance = 0) -> None:
         self.__balance = balance;
         self.acc_no = f'CA-{random.randint(1, 1000)}';
+        self.__trx_history = [];
+        super().__init__(name, email, address);
 
     def deposit(self, amount):
         self.__balance += amount;
-        Bank.balance += amount;
+        Bank.setBalance(Bank.getBalance() + amount);
         print(f'Successfully Deposited Amount {amount}, in account {self.acc_no}, current balance is {self.__balance}');
 
     def withdraw(self, amount):
+        if(amount > self.__balance) :
+            print('Insufficient Funds');
+            return;
+    
         self.__balance -= amount;
-        Bank.balance -= amount;
+        Bank.setBalance(Bank.getBalance() - amount);
         print(f'Withdrawn {amount} from account {self.acc_no}, current balance is {self.__balance}');
 
     def transfer(self, amount, acc_no) :
-        receiver = None;
         if(self.__balance < amount) :
             print('Insufficient Balance.');
             return;
-
-        for account in Bank.saving_accounts :
-            if(account.acc_no == acc_no) :
-                receiver = account;
-
-        for account in Bank.current_accounts :
-            if(account.acc_no == acc_no) :
-                receiver = account;
-
-        if not receiver :
-            print('Sorry! Account does not exist.');
+        transaction = Bank.transferAmount(self, amount, acc_no);
+        if not transaction :
+            print('Transactio Failed');
         else :
-            transaction = Transaction(self, amount, receiver);
-            self.trx_history = transaction;
-            Bank.trx_history = transaction;
+            self.__trx_history.append(transaction);
+            print('Transaction Completed');
 
-    def checkBalance(self):
-        print(f'The Current Account, {self.acc_no} has balance of {self.__balance}');
+    @property
+    def balance(self):
         return self.__balance;
 
     def issueLoan(self, amount) :
         if not Bank.loan :
             print('Loan is currently disabled');
             return;
-        if(Bank.balance <= 0) :
+        if(Bank.getBalance() <= 0) :
             print('Sorry! Bank is bankrupt');
             return;
         if(self.loan_count <= 0) :
             print(f'Sorry! You have already issued two loans and in {self.debt} debt to the bank');
             return;
         
-        Bank.balance -= amount;
         self.debt += amount;
         self.loan_count -= 1;
-        Bank.loan_issued += 1;
-        Bank.loan_amount += amount;
+        Bank.issueLoan(amount);        
+        print(f'You are issued a cash loan of {amount}. The amount is not added to your account');
+
+
+    def viewTransactions(self) :
+        print('Transactions are listed below.');
+        for transaction in self.__trx_history :
+            print(f'Transaction of {transaction.amount}, on {transaction.time} \n');
+
+        if(self.__trx_history.__len__() == 0) :
+            print('No transaction history');
