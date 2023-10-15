@@ -1,13 +1,14 @@
 from User import User;
 from Bank import Bank;
 from Transaction import Transaction;
+import random;
 
 # Class Definition for Savings Account;
 class SavingsAccount(User) :
     def __init__(self, name, email, address, balance = 0) -> None:
+        super().__init__(name, email, address);
         self.__balance = balance;
-        self.acc_no = f'SA-{Bank.saving_accounts.__len__() + 1}';
-        super.__init__(name, email, address);
+        self.acc_no = f'SA-{random.randint(1, 1000)}';
 
     def deposit(self, amount):
         self.__balance += amount;
@@ -25,11 +26,11 @@ class SavingsAccount(User) :
             print('Insufficient Balance.');
             return;
 
-        for account in Bank.saving_accounts :
+        for account in Bank.__saving_accounts :
             if(account.acc_no == acc_no) :
                 receiver = account;
 
-        for account in Bank.current_accounts :
+        for account in Bank.__current_accounts :
             if(account.acc_no == acc_no) :
                 receiver = account;
 
@@ -59,16 +60,16 @@ class SavingsAccount(User) :
         self.debt += amount;
         self.loan_count -= 1;
         Bank.loan_issued += 1;
+        Bank.loan_amount += amount;
         
-
 
 
 #  Class Definition for Current Account;
 class CurrentAccount(User) :
     def __init__(self, name, email, address, balance) -> None:
-        self.__balance = balance;
-        self.acc_no = f'CA-{Bank.current_accounts.__len__() + 1}';
         super().__init__(name, email, address);
+        self.__balance = balance;
+        self.acc_no = f'CA-{random.randint(1, 1000)}';
 
     def deposit(self, amount):
         self.__balance += amount;
@@ -120,3 +121,4 @@ class CurrentAccount(User) :
         self.debt += amount;
         self.loan_count -= 1;
         Bank.loan_issued += 1;
+        Bank.loan_amount += amount;

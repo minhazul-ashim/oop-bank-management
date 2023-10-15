@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod;
-from Bank import Bank;
+# from Bank import Bank;
 
 class User(ABC) :
     def __init__(self, name, email, address) -> None:
